@@ -3,9 +3,13 @@ package com.genetic.utility;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ImageUtil {
-    public static double euclidDistance(double x1, double y1, double x2, double y2) {
-        double d = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
-        return d;
+    private static final double MAX = Math.sqrt(3);
+    public static double euclidDistance(int origincolor,int color2) {
+        double rd = r(origincolor) - r(color2);
+        double gd = g(origincolor) - g(color2);
+        double bd = b(origincolor) - b(color2);
+
+        return Math.sqrt(rd * rd + gd * gd + bd * bd) / MAX;
     }
     public static int colorDistance(int color1, int color2) {
         return color1 - color2;
@@ -14,16 +18,20 @@ public class ImageUtil {
         ThreadLocalRandom current = ThreadLocalRandom.current();
         return current.nextInt(0, 256); 
     }
+    public static int rand2() {
+        ThreadLocalRandom current = ThreadLocalRandom.current();
+        return current.nextInt(0, 4); 
+    }
     public static int r(int color){
-        return color >> 16 & 0xff;
+        return color >> 16 & 0b11111111;
     }
     public static int g(int color){
-        return color >> 8 & 0xff;
+        return color >> 8 & 0b11111111;
     }
     public static int b(int color){
-        return color & 0xff;
+        return color & 0b11111111;
     }
     public static int rgb(int r, int g, int b){
-        return 0xff000000 | r << 16 | g << 8 | b;
+        return r << 16 | g << 8 | b;
     }
 }

@@ -9,44 +9,80 @@ import javax.imageio.ImageIO;
 import com.genetic.utility.ImageUtil;
 
 public class FileEdit {
-    private static String makeGenDirectory(String directory,int gen) {
+    private static String makeGenDirectory(String directory,int gen,int i) {
         StringBuilder sb = new StringBuilder();
+        if(i == -1) return directory;
         return sb.append(directory).append("\\").append(gen).toString();
     }
 
     private static File makeFilePath(String directory,int i) {
         StringBuilder sb = new StringBuilder();
-        String filepath = sb.append(directory).append("\\").append("individual").append(i).append(".png").toString();
-        return new File(filepath);
+        if(i == -1) return new File(directory);
+        directory = sb.append(directory).append("\\").append("individual").append(i).append(".png").toString();
+        return new File(directory);
     }
     
-    public int[][] readImageFile(String filepath) throws IOException{
+    public int[][] readImageFile(String filepath,int gen,int i){
         int imageRGB[][] = new int[50][50]; 
-        File file = new File(filepath);	
-        BufferedImage image = ImageIO.read(file);
-        for(int y = 0;y < 50; y++){
-            for(int x = 0;x < 50; x++) {
-                imageRGB[y][x] = image.getRGB(x,y);
+        filepath = makeGenDirectory(filepath, gen,i);
+        File file = makeFilePath(filepath,i);	
+        try {
+            BufferedImage image = ImageIO.read(file);
+            for(int y = 0;y < 50; y++){
+                for(int x = 0;x < 50; x++) {
+                    imageRGB[y][x] = image.getRGB(x,y);
+                }
             }
+        } catch(IOException e) {
+            System.out.println(e);
         }
         return imageRGB;
     }
-    public void writeImageFile(String path,int generation,int i) throws IOException {
-        String directory = makeGenDirectory(path, generation);
+    public void writeImageFile(String path,int generation,int i, int [][] test) {
+        String directory = makeGenDirectory(path, generation,i);
         File dir = new File(directory);
         dir.mkdir();
         BufferedImage write = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
         
         for(int y = 0;y < 50; y++){
             for(int x = 0;x < 50; x++){
-                int r = ImageUtil.rand();
-                int g = ImageUtil.rand();
-                int b = ImageUtil.rand();
-                int rgb = ImageUtil.rgb(r,g,b);
-                write.setRGB(x,y,rgb);
+                write.setRGB(x,y,test[y][x]);
             }
         }
         File file = makeFilePath(directory,i);
-        ImageIO.write(write, "png", file);
+        try {
+            ImageIO.write(write, "png", file);
+        } catch (Exception e) {
+            System.out.println("ddddddd");
+        }
+    }
+
+
+    public void writeFirstImageFile(String path,int generation,int i) {
+        String directory = makeGenDirectory(path, generation,i);
+        File dir = new File(directory);
+        dir.mkdir();
+        BufferedImage write = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
+        setRGB(write, generation);
+        File file = makeFilePath(directory,i);
+        try {
+            ImageIO.write(write, "png", file);
+        } catch (Exception e) {
+            System.out.println("ddddddd");
+        }
+    }
+    private int randomRGB() {
+        int r = ImageUtil.rand();
+        int g = ImageUtil.rand();
+        int b = ImageUtil.rand();
+        return ImageUtil.rgb(r,g,b);
+    }
+    private BufferedImage setRGB(BufferedImage write,int gen) {
+        for(int y = 0;y < 50; y++){
+            for(int x = 0;x < 50; x++){
+                write.setRGB(x,y,randomRGB());
+            }
+        }
+        return write;
     }
 }
