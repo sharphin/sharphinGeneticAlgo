@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
-    <readfilePath>C:\Users\extend\Desktop\image\baseImage\origin.png</readfilePath>
-    <writefilePath>C:\Users\extend\Desktop\image\generateImage</writefilePath>
-    <individual_max>8</individual_max>
-    <generation_max>3</generation_max>
+    <readfilePath>C:\Users\sharphin20\Desktop\image\baseImage\origin.png</readfilePath>
+    <writefilePath>C:\Users\sharphin20\Desktop\image\generateImage</writefilePath>
+    <individual_max>256</individual_max>
+    <generation_max>4000</generation_max>
     <survived_individual>4</survived_individual>
-    <file_out>true</file_out>
-    <mutation>1</mutation>
+    <file_out>false</file_out>
+    <mutation>0.3</mutation>
 </data>

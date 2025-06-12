@@ -1,5 +1,6 @@
 package com.genetic.mainlogic;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -11,16 +12,13 @@ public class CullIndividual {
     //方法は元の画像と一ピクセルごとにRGB値を比較していきその色差の合計が少ないほうが勝ち。
     //勝ち残った画像から次の世代の個体を生成する
     private LinkedList<int[][]> cullImage;
-
     private final int survived_individual;
-    public CullIndividual(int survived_individual) {
-        cullImage = new LinkedList<>();
+
+    public CullIndividual(int [][][] imagergb, int survived_individual) {
+        cullImage = new LinkedList<>(Arrays.asList(imagergb));
         this.survived_individual = survived_individual;
     }
-    public void addImage(int [][] imagergb) {
-        cullImage.add(imagergb);
-    }
-    //無数ある個体から優秀な個体をのぞき間引き
+    //無数ある画像から優秀な画像をのぞき、間引き
     public void cull(int originimage[][]) {
         for(int i = 0;i < cullImage.size()-1; i+=2){
             double diff1 = 0.0;
@@ -40,13 +38,13 @@ public class CullIndividual {
         }
         cull(originimage);
     }
-    //間引かれなかった個体から次の世代の個体を生成。
-    public int[][] createNextGeneration(int survived_individual,int mutation) {
-        ThreadLocalRandom current = ThreadLocalRandom.current();
+    // 生き残った画像を交配させ新しい画像を生成
+    private int[][] matingImage(double mutation) {
         int newImage[][] = new int[50][50];
         for(int y = 0;y < 50; y++) {
             for(int x = 0;x < 50; x++) {
-                double rand = current.nextInt(0, 100/(int)mutation); 
+                ThreadLocalRandom current = ThreadLocalRandom.current();
+                double rand = current.nextInt(0, (int)(100.0/mutation)); 
                 if(rand == 0) {
                     newImage[y][x] = ImageUtil.randomRGB();
                 } else {
@@ -55,5 +53,12 @@ public class CullIndividual {
             }
         }
         return newImage;
+    } 
+    public int[][][] createNextGeneration(int individual_max, double mutation) {
+        int [][][] nextgen = new int[individual_max][50][50];
+        for(int i = 0; i < individual_max;i++) {
+            nextgen[i] = matingImage(mutation);
+        }
+        return nextgen;
     }
 }

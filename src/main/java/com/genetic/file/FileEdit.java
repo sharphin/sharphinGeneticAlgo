@@ -6,8 +6,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import com.genetic.utility.ImageUtil;
-
 public class FileEdit {
     private static String makeGenDirectory(String directory,int gen,int i) {
         StringBuilder sb = new StringBuilder();
@@ -38,15 +36,15 @@ public class FileEdit {
         }
         return imageRGB;
     }
-    public void writeImageFile(String path,int generation,int i, int [][] test) {
+    public void fileWriteImage(String path,int generation,int i, int image[][]) {
         String directory = makeGenDirectory(path, generation,i);
         File dir = new File(directory);
         dir.mkdir();
         BufferedImage write = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
-        
+        setRGB(write,image);
         for(int y = 0;y < 50; y++){
             for(int x = 0;x < 50; x++){
-                write.setRGB(x,y,test[y][x]);
+                write.setRGB(x,y,image[y][x]);
             }
         }
         File file = makeFilePath(directory,i);
@@ -56,28 +54,15 @@ public class FileEdit {
             System.out.println("ddddddd");
         }
     }
-    public void createFirstGeneration(String path,int individual_max) {
-        for(int i = 0; i < individual_max;i++) {
-            writeFirstImageFile(path,i);
+    public void fileWriteNewGeneration(String path,int gen,int [][][] images) {
+        for(int i = 0; i < images.length;i++) {
+            fileWriteImage(path,gen,i,images[i]);
         }
     }
-    private void writeFirstImageFile(String path,int i) {
-        String directory = makeGenDirectory(path, 1,i);
-        File dir = new File(directory);
-        dir.mkdir();
-        BufferedImage write = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
-        setRGB(write);
-        File file = makeFilePath(directory,i);
-        try {
-            ImageIO.write(write, "png", file);
-        } catch (IOException e) {
-            System.out.println("ddddddd");
-        }
-    }
-    private BufferedImage setRGB(BufferedImage write) {
+    private BufferedImage setRGB(BufferedImage write, int[][] image) {
         for(int y = 0;y < 50; y++){
             for(int x = 0;x < 50; x++){
-                write.setRGB(x,y,ImageUtil.randomRGB());
+                write.setRGB(x,y,image[y][x]);
             }
         }
         return write;

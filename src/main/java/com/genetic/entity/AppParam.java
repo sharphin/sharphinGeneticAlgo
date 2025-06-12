@@ -6,6 +6,6 @@ public record AppParam(String originfilepath,
                        int generation_max,
                        int survived_individual,
                        boolean file_out,
-                       int mutation) {
+                       double mutation) {
     
 }
