@@ -70,7 +70,7 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
     public void run() {
         while(true) {
             try {
-                Thread.sleep(100); // 1秒間停止
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 System.out.println("割り込みが発生");
             }
