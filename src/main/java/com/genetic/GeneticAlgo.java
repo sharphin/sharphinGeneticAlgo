@@ -9,19 +9,33 @@ import com.genetic.mainlogic.CullIndividual;
 public class GeneticAlgo {
     public static void main(String[] args) {
         SettingFile sf = new SettingFile();
+
         AppParam param = sf.loadFilePath();
+        //geneti(param);
+        new BaseFrame(param);
+    }
+    static void geneti(AppParam param) {
+
+        String originFilePath = param.originfilepath();
+        String learnFilePath = param.learnfilepath();
+        int individual_max = param.individual_max();
+        int generation_max = param.generation_max();
+        int survived_individual = param.survived_individual();
+
         FileEdit genf = new FileEdit();
-        for (int i = 1; i <= param.individual_max(); i++) {
-            genf.writeFirstImageFile(param.writefilepath(),1,i);
-        }
-        for(int ii = 1; ii < 500; ii++) {
-            CullIndividual cullIndividual = new CullIndividual();
-            int originImage[][] = genf.readImageFile(param.readfilepath(),-1,-1);
-            for (int i = 1; i < param.individual_max(); i++) {
-                cullIndividual.addImage(genf.readImageFile(param.writefilepath(),ii,i));
+        int originImage[][] = genf.readImageFile(originFilePath,-1,-1);
+        genf.createFirstGeneration(learnFilePath,individual_max);
+
+        for(int gen = 1; gen < generation_max; gen++) {
+            CullIndividual cullIndividual = new CullIndividual(survived_individual);
+            for (int i = 1; i < individual_max; i++) {
+                cullIndividual.addImage(genf.readImageFile(learnFilePath,gen,i));
             }
-            cullIndividual.cull(param.individual_max(), originImage);
-            cullIndividual.createNextGeneration(param.writefilepath(),ii+1,param.individual_max(),param.mutation());
+            cullIndividual.cull(originImage);
+            for(int i = 0; i < individual_max; i++) {
+                int newImage [][] = cullIndividual.createNextGeneration(param.survived_individual(), param.mutation());
+                genf.writeImageFile(learnFilePath,gen+1,i,newImage);
+            }
         }
     }
 }

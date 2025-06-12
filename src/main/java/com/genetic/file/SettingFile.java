@@ -22,7 +22,10 @@ public class SettingFile {
             return new AppParam(nodes.item(1).getTextContent(),
                                 nodes.item(3).getTextContent(),
                                 Integer.parseInt(nodes.item(5).getTextContent()),
-                                Integer.parseInt(nodes.item(7).getTextContent()));
+                                Integer.parseInt(nodes.item(7).getTextContent()),
+                                Integer.parseInt(nodes.item(9).getTextContent()),
+                                Boolean.getBoolean(nodes.item(11).getTextContent()),
+                                Integer.parseInt(nodes.item(13).getTextContent()));
 
         } catch(Exception e) {
             return null;

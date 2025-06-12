@@ -52,35 +52,32 @@ public class FileEdit {
         File file = makeFilePath(directory,i);
         try {
             ImageIO.write(write, "png", file);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("ddddddd");
         }
     }
-
-
-    public void writeFirstImageFile(String path,int generation,int i) {
-        String directory = makeGenDirectory(path, generation,i);
+    public void createFirstGeneration(String path,int individual_max) {
+        for(int i = 0; i < individual_max;i++) {
+            writeFirstImageFile(path,i);
+        }
+    }
+    private void writeFirstImageFile(String path,int i) {
+        String directory = makeGenDirectory(path, 1,i);
         File dir = new File(directory);
         dir.mkdir();
         BufferedImage write = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
-        setRGB(write, generation);
+        setRGB(write);
         File file = makeFilePath(directory,i);
         try {
             ImageIO.write(write, "png", file);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("ddddddd");
         }
     }
-    private int randomRGB() {
-        int r = ImageUtil.rand();
-        int g = ImageUtil.rand();
-        int b = ImageUtil.rand();
-        return ImageUtil.rgb(r,g,b);
-    }
-    private BufferedImage setRGB(BufferedImage write,int gen) {
+    private BufferedImage setRGB(BufferedImage write) {
         for(int y = 0;y < 50; y++){
             for(int x = 0;x < 50; x++){
-                write.setRGB(x,y,randomRGB());
+                write.setRGB(x,y,ImageUtil.randomRGB());
             }
         }
         return write;

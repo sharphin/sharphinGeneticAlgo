@@ -11,16 +11,15 @@ public class ImageUtil {
 
         return Math.sqrt(rd * rd + gd * gd + bd * bd) / MAX;
     }
+    public static int randomRGB() {
+        return ImageUtil.rgb(rand(),rand(),rand());
+    }
     public static int colorDistance(int color1, int color2) {
         return color1 - color2;
     }
     public static int rand() {
         ThreadLocalRandom current = ThreadLocalRandom.current();
         return current.nextInt(0, 256); 
-    }
-    public static int rand2() {
-        ThreadLocalRandom current = ThreadLocalRandom.current();
-        return current.nextInt(0, 4); 
     }
     public static int r(int color){
         return color >> 16 & 0b11111111;
