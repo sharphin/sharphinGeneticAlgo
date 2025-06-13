@@ -12,19 +12,21 @@ import javax.swing.JPanel;
 import com.genetic.BaseFrame;
 import com.genetic.entity.AppParam;
 import com.genetic.entity.GenParam;
+import com.genetic.file.FileEdit;
 import com.genetic.mainlogic.AreaSplit;
 import com.genetic.mainlogic.GenerateThread;
 
 public class HomePanel extends JPanel implements MouseListener,Runnable{
     private final int MAX_PIXEL = 300;
+    private final int originImage[][];
     private int x,y;
+    private int image[][];
+    private boolean processing,filewritten = true;
+
     public static int now_gen;
+    public static int sharedGeneratedImages[][][];
     AppParam param;
     Rectangle start = new Rectangle(400,250,100,50);
-    private final int originImage[][];
-    private int image[][];
-    public static int sharedGeneratedImages[][][];
-    public static boolean processing;
     public HomePanel(AppParam param,int originImage[][]) {
         sharedGeneratedImages = new int[param.individual_max()][originImage.length][originImage.length];
         this.param = param;
@@ -38,7 +40,7 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         int revision = MAX_PIXEL/image.length;
-        g.drawRect(15, 15, 315, 315);
+        g.drawRect(15, 15, 300, 300);
         for(int y = 0; y < image.length; y++) {
             for(int x = 0; x < image[y].length; x++) {
                 g.setColor(new Color(image[y][x]));
@@ -50,7 +52,7 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
         g.drawString("max_generation: "+param.generation_max(), 400, 130);
         g.drawString("survived_individual: "+param.mating_max(), 400, 160);
         g.drawString("mutation: "+param.mutation(), 400, 190);
-        g.drawString("now generation: "+now_gen/param.thread_max(), 400, 220);
+        g.drawString("now generation: "+now_gen, 400, 220);
         g.drawRect(start.x, start.y, start.width,start.height);
         g.setFont(new Font("Arial", Font.PLAIN, 20));
         g.drawString("START", 417, 280);
@@ -63,6 +65,7 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
         if(start.contains(x, y)) {
             now_gen = 1;
             processing = true;
+            filewritten = false;
             AreaSplit split = new AreaSplit(param.thread_max(), originImage.length, originImage.length);
             GenParam genparams[] = split.responsibleArea();
             for (GenParam genparam: genparams) {
@@ -83,13 +86,22 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
     @Override
     public void run() {
         while(true) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                System.out.println("割り込みが発生");
+            if(now_gen < param.generation_max()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    System.out.println("割り込みが発生");
+                }
+                repaint();
+                image = sharedGeneratedImages[0];
+            } else {
+                processing = false;
             }
-            repaint();
-            image = sharedGeneratedImages[0];
+            if(!processing && !filewritten) {
+                FileEdit fedit = new FileEdit();
+                fedit.fileWriteImage(param.learnfilepath(), image);
+                filewritten = true;
+            }
         }
     }
 }

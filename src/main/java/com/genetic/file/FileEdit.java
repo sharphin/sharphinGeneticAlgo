@@ -7,22 +7,15 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class FileEdit {
-    private static String makeGenDirectory(String directory,int gen,int i) {
-        StringBuilder sb = new StringBuilder();
-        if(i == -1) return directory;
-        return sb.append(directory).append("\\").append(gen).toString();
-    }
 
-    private static File makeFilePath(String directory,int i) {
+    private static File makeFilePath(String directory) {
         StringBuilder sb = new StringBuilder();
-        if(i == -1) return new File(directory);
-        directory = sb.append(directory).append("\\").append("individual").append(i).append(".png").toString();
+        directory = sb.append(directory).append("\\").append("result").append(".png").toString();
         return new File(directory);
     }
     
-    public int[][] readImageFile(String filepath,int gen,int i){
-        filepath = makeGenDirectory(filepath, gen,i);
-        File file = makeFilePath(filepath,i);	
+    public int[][] readImageFile(String filepath){
+        File file = new File(filepath);
         try {
             BufferedImage image = ImageIO.read(file);
             int imageRGB[][] = new int[image.getWidth()][image.getHeight()];
@@ -37,22 +30,16 @@ public class FileEdit {
             return null;
         }
     }
-    public void fileWriteImage(String path,int generation,int i, int image[][]) {
-        String directory = makeGenDirectory(path, generation,i);
-        File dir = new File(directory);
+    public void fileWriteImage(String path,int image[][]) {
+        File dir = new File(path);
         dir.mkdir();
-        BufferedImage write = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
+        BufferedImage write = new BufferedImage(image[0].length, image.length, BufferedImage.TYPE_INT_RGB);
         setRGB(write,image);
-        File file = makeFilePath(directory,i);
+        File file = makeFilePath(path);
         try {
             ImageIO.write(write, "png", file);
         } catch (IOException e) {
             System.out.println("ddddddd");
-        }
-    }
-    public void fileWriteNewGeneration(String path,int gen,int [][][] images) {
-        for(int i = 0; i < images.length;i++) {
-            fileWriteImage(path,gen,i,images[i]);
         }
     }
     private BufferedImage setRGB(BufferedImage write, int[][] image) {

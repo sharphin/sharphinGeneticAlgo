@@ -14,7 +14,7 @@ public class GeneticAlgo {
         if(param.paramCheck()) {
             System.err.println("OK");
             FileEdit genf = new FileEdit();
-            int originImage[][] = genf.readImageFile(param.originfilepath(),-1,-1);
+            int originImage[][] = genf.readImageFile(param.originfilepath());
 
             if(originImage.length != originImage[0].length) {
                 AppParam.message.add("元画像は正方形にしてください。");
