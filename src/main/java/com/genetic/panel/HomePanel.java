@@ -9,39 +9,48 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
+import com.genetic.BaseFrame;
 import com.genetic.entity.AppParam;
-import com.genetic.file.FileEdit;
-import com.genetic.mainlogic.CullIndividual;
-import com.genetic.mainlogic.GenerateImage;
+import com.genetic.entity.GenParam;
+import com.genetic.mainlogic.AreaSplit;
+import com.genetic.mainlogic.GenerateThread;
 
 public class HomePanel extends JPanel implements MouseListener,Runnable{
-    private int x,y,now_gen =1;
-    private static boolean processing;
+    private final int MAX_PIXEL = 300;
+    private int x,y;
+    public static int now_gen;
     AppParam param;
     Rectangle start = new Rectangle(400,250,100,50);
-    private int[][] image = new int[50][50];
-    public HomePanel(int width,int height ,AppParam param) {
+    private final int originImage[][];
+    private int image[][];
+    public static int sharedGeneratedImages[][][];
+    public static boolean processing;
+    public HomePanel(AppParam param,int originImage[][]) {
+        sharedGeneratedImages = new int[param.individual_max()][originImage.length][originImage.length];
         this.param = param;
-        setSize(width,height);
+        this.originImage = originImage;
+        image = new int[originImage.length][originImage.length];
+        setSize(BaseFrame.WIDTH,BaseFrame.HEIGHT);
         addMouseListener(this);
-        Thread th = new Thread(this);
-        th.start();
+        Thread th1 = new Thread(this);
+        th1.start();
     }
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+        int revision = MAX_PIXEL/image.length;
         g.drawRect(15, 15, 215, 215);
-        for(int y = 0; y < 50; y++) {
-            for(int x = 0; x < 50; x++) {
+        for(int y = 0; y < image.length; y++) {
+            for(int x = 0; x < image[y].length; x++) {
                 g.setColor(new Color(image[y][x]));
-                g.fillRect(x*6+15, y*6+15, 6, 6);
+                g.fillRect(x*revision+15, y*revision+15, 6, 6);
             }
         }
         g.setColor(Color.BLACK);
         g.drawString("max_individual: "+param.individual_max(), 400, 100);
         g.drawString("max_generation: "+param.generation_max(), 400, 130);
-        g.drawString("survived_individual: "+param.survived_individual(), 400, 160);
+        g.drawString("survived_individual: "+param.mating_max(), 400, 160);
         g.drawString("mutation: "+param.mutation(), 400, 190);
-        g.drawString("now generation: "+now_gen, 400, 220);
+        g.drawString("now generation: "+now_gen/4, 400, 220);
         g.drawRect(start.x, start.y, start.width,start.height);
         g.setFont(new Font("Arial", Font.PLAIN, 20));
         g.drawString("START", 417, 280);
@@ -52,20 +61,25 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
         x = e.getX();
         y = e.getY();
         if(start.contains(x, y)) {
+            now_gen = 1;
             processing = true;
+            AreaSplit split = new AreaSplit(param.thread_max(), originImage.length, originImage.length);
+            GenParam genparams[] = split.responsibleArea();
+            for (GenParam genparam: genparams) {
+                GenerateThread gThread =  new GenerateThread(param, genparam, originImage);
+                Thread th = new Thread(gThread);
+                th.start();
+            }
         }
     }
     @Override
     public void mouseEntered(MouseEvent e){}
     @Override
-    public void mouseExited(MouseEvent e) {
-    }
+    public void mouseExited(MouseEvent e) {}
     @Override
-    public void mousePressed(MouseEvent e) {
-    }
+    public void mousePressed(MouseEvent e) {}
     @Override
-    public void mouseReleased(MouseEvent e) { 
-    }
+    public void mouseReleased(MouseEvent e) {}
     @Override
     public void run() {
         while(true) {
@@ -74,31 +88,8 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
             } catch (InterruptedException e) {
                 System.out.println("割り込みが発生");
             }
-            if(!processing) continue;
-            System.out.println("処理開始");
-            String originFilePath = param.originfilepath();
-            String learnFilePath = param.learnfilepath();
-            int individual_max = param.individual_max();
-            int generation_max = param.generation_max();
-            int survived_individual = param.survived_individual();
-            boolean file_out = param.file_out();
-            FileEdit genf = new FileEdit();
-            GenerateImage genImage = new GenerateImage();
-            int generationImages[][][] = genImage.createFirstGeneration(individual_max);
-            int originImage[][] = genf.readImageFile(originFilePath,-1,-1);
-            if(file_out) genf.fileWriteNewGeneration(learnFilePath,1,generationImages);
-
-            for(int gen = 2; gen <= generation_max; gen++) {
-                CullIndividual cullIndividual = new CullIndividual(generationImages,survived_individual);
-                cullIndividual.cull(originImage);
-                generationImages = cullIndividual.createNextGeneration(individual_max, param.mutation());
-                image = generationImages[0];
-                if(file_out) genf.fileWriteNewGeneration(learnFilePath,gen,generationImages);
-                now_gen++;
-                repaint();
-            }
-            System.out.println("処理終了");
-            processing = false;
+            repaint();
+            image = sharedGeneratedImages[0];
         }
     }
 }

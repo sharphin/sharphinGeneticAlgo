@@ -21,20 +21,21 @@ public class FileEdit {
     }
     
     public int[][] readImageFile(String filepath,int gen,int i){
-        int imageRGB[][] = new int[50][50]; 
         filepath = makeGenDirectory(filepath, gen,i);
         File file = makeFilePath(filepath,i);	
         try {
             BufferedImage image = ImageIO.read(file);
-            for(int y = 0;y < 50; y++){
-                for(int x = 0;x < 50; x++) {
+            int imageRGB[][] = new int[image.getWidth()][image.getHeight()];
+            for(int y = 0;y < image.getHeight(); y++){
+                for(int x = 0;x < image.getWidth(); x++) {
                     imageRGB[y][x] = image.getRGB(x,y);
                 }
             }
+            return imageRGB;
         } catch(IOException e) {
             System.out.println(e);
+            return null;
         }
-        return imageRGB;
     }
     public void fileWriteImage(String path,int generation,int i, int image[][]) {
         String directory = makeGenDirectory(path, generation,i);
@@ -42,11 +43,6 @@ public class FileEdit {
         dir.mkdir();
         BufferedImage write = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
         setRGB(write,image);
-        for(int y = 0;y < 50; y++){
-            for(int x = 0;x < 50; x++){
-                write.setRGB(x,y,image[y][x]);
-            }
-        }
         File file = makeFilePath(directory,i);
         try {
             ImageIO.write(write, "png", file);
@@ -60,8 +56,8 @@ public class FileEdit {
         }
     }
     private BufferedImage setRGB(BufferedImage write, int[][] image) {
-        for(int y = 0;y < 50; y++){
-            for(int x = 0;x < 50; x++){
+        for(int y = 0;y < image.length; y++){
+            for(int x = 0;x < image[y].length; x++){
                 write.setRGB(x,y,image[y][x]);
             }
         }

@@ -25,8 +25,9 @@ public class SettingFile {
                                 Integer.parseInt(nodes.item(7).getTextContent()),
                                 Integer.parseInt(nodes.item(9).getTextContent()),
                                 Boolean.parseBoolean(nodes.item(11).getTextContent()),
-                                Double.parseDouble(nodes.item(13).getTextContent()));
-        } catch(Exception e) {
+                                Double.parseDouble(nodes.item(13).getTextContent()),
+                                Integer.parseInt(nodes.item(15).getTextContent()));
+        } catch(Exception e3) {
             return null;
         }
     }

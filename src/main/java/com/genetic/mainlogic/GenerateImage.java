@@ -1,21 +1,21 @@
 package com.genetic.mainlogic;
 
+import com.genetic.entity.GenParam;
+import com.genetic.panel.HomePanel;
 import com.genetic.utility.ImageUtil;
 
 public class GenerateImage {
-    public int[][][] createFirstGeneration(int individual_max) {
-        int temp[][][] = new int [individual_max][50][50];
-        for(int i = 0; i < individual_max; i++) {
-            setRandRGB(temp[i]);
-        }
-        return temp;
+    private final GenParam gparam;
+    public GenerateImage(GenParam gparam) {
+        this.gparam = gparam;
     }
-    private int[][] setRandRGB(int array2d[][]) {
-        for(int y = 0;y < 50; y++){
-            for(int x = 0;x < 50; x++){
-                array2d[y][x] = ImageUtil.randomRGB();
+    public void createFirstGeneration(int individual_max) {
+        for(int i = 0; i < individual_max; i++) {
+            for(int y = gparam.y();y < gparam.height(); y++) {
+                for(int x = gparam.x();x < gparam.width(); x++) {
+                    HomePanel.sharedGeneratedImages[i][y][x] = ImageUtil.randomRGB();
+                }
             }
         }
-        return array2d;
     }
 }
