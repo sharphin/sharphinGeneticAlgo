@@ -38,11 +38,11 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         int revision = MAX_PIXEL/image.length;
-        g.drawRect(15, 15, 215, 215);
+        g.drawRect(15, 15, 315, 315);
         for(int y = 0; y < image.length; y++) {
             for(int x = 0; x < image[y].length; x++) {
                 g.setColor(new Color(image[y][x]));
-                g.fillRect(x*revision+15, y*revision+15, 6, 6);
+                g.fillRect(x*revision+15, y*revision+15, revision, revision);
             }
         }
         g.setColor(Color.BLACK);
@@ -50,7 +50,7 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
         g.drawString("max_generation: "+param.generation_max(), 400, 130);
         g.drawString("survived_individual: "+param.mating_max(), 400, 160);
         g.drawString("mutation: "+param.mutation(), 400, 190);
-        g.drawString("now generation: "+now_gen/4, 400, 220);
+        g.drawString("now generation: "+now_gen/param.thread_max(), 400, 220);
         g.drawRect(start.x, start.y, start.width,start.height);
         g.setFont(new Font("Arial", Font.PLAIN, 20));
         g.drawString("START", 417, 280);
