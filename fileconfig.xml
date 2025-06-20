@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
-    <readfilePath>C:\Users\xxxxxxxxx</readfilePath>
-    <writefilePath>C:\Users\xxxxxxxxxxx</writefilePath>
+    <readfilePath>C:\Users\extend\Desktop\image\baseImage/origin3.png</readfilePath>
+    <writefilePath>C:\Users\extend\Desktop\image\generateImage</writefilePath>
     <individual_max>256</individual_max>
-    <generation_max>200</generation_max>
+    <generation_max>1000</generation_max>
     <survived_individual>4</survived_individual>
-    <file_out>true</file_out>
+    <file_out>false</file_out>
     <mutation>0.1</mutation>
     <thread>16</thread>
 </data>
