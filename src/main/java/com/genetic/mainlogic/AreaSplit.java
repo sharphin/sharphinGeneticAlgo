@@ -10,10 +10,9 @@ public class AreaSplit {
         this.width = width;
         this.height = height;
     }
-    public GenParam[] responsibleArea() {
+    public GenParam[] splitResponsibleArea() {
         GenParam params[] = {new GenParam(0,0,width,height)};
         if(split_num < 2) return params;
-
         int horiSplit = (int)Math.sqrt(split_num);
         int vertSplit = split_num/horiSplit;
         params = new GenParam[split_num];

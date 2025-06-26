@@ -26,7 +26,7 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
     public static int now_gen;
     public static int sharedGeneratedImages[][][];
     AppParam param;
-    Rectangle start = new Rectangle(400,250,100,50);
+    Rectangle start = new Rectangle(400,270,100,50);
     public HomePanel(AppParam param,int originImage[][]) {
         sharedGeneratedImages = new int[param.individual_max()][originImage.length][originImage.length];
         this.param = param;
@@ -53,9 +53,10 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
         g.drawString("survived_individual: "+param.mating_max(), 400, 160);
         g.drawString("mutation: "+param.mutation(), 400, 190);
         g.drawString("now generation: "+now_gen, 400, 220);
+        g.drawString("thread: "+param.thread_max(), 400, 250);
         g.drawRect(start.x, start.y, start.width,start.height);
         g.setFont(new Font("Arial", Font.PLAIN, 20));
-        g.drawString("START", 417, 280);
+        g.drawString("START", 417, 300);
     }
     @Override
     public void mouseClicked(MouseEvent e){
@@ -67,7 +68,7 @@ public class HomePanel extends JPanel implements MouseListener,Runnable{
             processing = true;
             filewritten = false;
             AreaSplit split = new AreaSplit(param.thread_max(), originImage.length, originImage.length);
-            GenParam genparams[] = split.responsibleArea();
+            GenParam genparams[] = split.splitResponsibleArea();
             for (int i = 0; i < genparams.length;i++) {
                 GenerateThread gThread =  new GenerateThread(param, genparams[i], originImage,i);
                 Thread th = new Thread(gThread);
