@@ -6,7 +6,7 @@ java GeneticAlgo
 how to use 
 fileconfig.xml
 でアプリの動作を設定します。
-    <readfilePath>ファイル名までを含めた、元ファイルまでのパス</readfilePath>\n
+    <readfilePath>ファイル名までを含めた、元ファイルまでのパス</readfilePath>
     <writefilePath>処理が終わったときに作られるpngファイルまでのパス</writefilePath>
     <individual_max>世代一つの個体（画像）数</individual_max>
     <generation_max>最大世代数</generation_max>
