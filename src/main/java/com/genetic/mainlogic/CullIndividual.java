@@ -23,12 +23,16 @@ public class CullIndividual {
     }
     //無数ある画像から優秀な画像をのぞき、間引き
     public void cull(int originimage[][]) {
+        int height = gparam.height();
+        int width = gparam.width();
+        int ycoord = gparam.y();
+        int xcoord = gparam.x();
         for(int i = 0;i < cullImage.size()-1; i+=2){
             double diff1 = 0.0;
             double diff2 = 0.0;
             if (cullImage.size() <= survived_individual) return;
-            for(int y = gparam.y();y < gparam.height(); y++) {
-                for(int x = gparam.x();x < gparam.width(); x++) {
+            for(int y = ycoord;y < height; y++) {
+                for(int x = xcoord;x < width; x++) {
                     diff1 += ImageUtil.euclidDistance(originimage[y][x],cullImage.get(i)[y][x]);
                     diff2 += ImageUtil.euclidDistance(originimage[y][x],cullImage.get(i+1)[y][x]);
                 }
@@ -43,10 +47,14 @@ public class CullIndividual {
     }
     // 生き残った画像を交配させ新しい画像を生成
     public void createNextGeneration(int individual_max, double mutation) {
+        int height = gparam.height();
+        int width = gparam.width();
+        int ycoord = gparam.y();
+        int xcoord = gparam.x();
+        ThreadLocalRandom current = ThreadLocalRandom.current();
         for(int i = 0; i < individual_max;i++) {
-            for(int y = gparam.y();y < gparam.height(); y++) {
-                for(int x = gparam.x();x < gparam.width(); x++) {
-                    ThreadLocalRandom current = ThreadLocalRandom.current();
+            for(int y = ycoord;y < height; y++) {
+                for(int x = xcoord;x < width; x++) {
                     int rand = current.nextInt(0, (int)(100.0/mutation)); 
                     if(mutation > 0.0 && rand == 0) {
                         HomePanel.sharedGeneratedImages[i][y][x] = ImageUtil.randomRGB();

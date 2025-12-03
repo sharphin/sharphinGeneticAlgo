@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
-    <readfilePath>C:\Users\extend\Desktop\image\baseImage\origin.png</readfilePath>
-    <writefilePath>C:\Users\extend\Desktop\image\generateImage</writefilePath>
+    <readfilePath>C:\Users\ost008262\Desktop\image\baseImage\origin.png</readfilePath>
+    <writefilePath>C:\Users\ost008262\Desktop\image\generateImage</writefilePath>
     <individual_max>256</individual_max>
     <generation_max>2000</generation_max>
     <survived_individual>4</survived_individual>
