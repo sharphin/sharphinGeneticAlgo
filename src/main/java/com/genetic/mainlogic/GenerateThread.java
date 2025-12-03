@@ -23,7 +23,7 @@ public class GenerateThread implements Runnable {
             genImage.createFirstGeneration(individual_max);
             for(int gen = 2; gen <= aparam.generation_max(); gen++) {
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     System.out.println("割り込みが発生");
                 }

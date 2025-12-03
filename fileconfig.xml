@@ -3,9 +3,9 @@
     <readfilePath>C:\Users\ost008262\Desktop\image\baseImage\origin.png</readfilePath>
     <writefilePath>C:\Users\ost008262\Desktop\image\generateImage</writefilePath>
     <individual_max>256</individual_max>
-    <generation_max>2000</generation_max>
+    <generation_max>4000</generation_max>
     <survived_individual>4</survived_individual>
     <file_out>false</file_out>
     <mutation>0.1</mutation>
-    <thread>16</thread>
+    <thread>4</thread>
 </data>
